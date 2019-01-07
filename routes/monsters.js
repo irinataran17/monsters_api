@@ -37,8 +37,6 @@ router.post('/', (request, response, next) => {
 
 router.put('/:id', (request, response, next) => {
     const {id} = request.params;
-    const {name, personality} = request.body;
-
     const keys = ['name', 'personality'];
     const fields = [];
 
@@ -56,9 +54,17 @@ router.put('/:id', (request, response, next) => {
                 if (index === fields.length - 1) response.redirect('/monsters');
             }
         )
-    });
+    });    
+});
 
-    
+router.delete('/:id', (request, response, next) => {
+    const {id} = request.params;
+
+    pool.query('DELETE FROM monsters WHERE id=($1)', [id], (err, res) => {
+        if (err) return next(err);
+
+        response.redirect('/monsters');
+    });
 });
 
 module.exports = router;
